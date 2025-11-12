@@ -1,6 +1,8 @@
 # Project specific
 allure-results
 debug
+
+notes
 # Logs
 logs
 *.log

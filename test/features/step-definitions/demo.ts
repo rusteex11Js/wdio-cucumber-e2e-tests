@@ -26,3 +26,44 @@ Then(/^URL should match (.*)$/, async function (expectedURL) {
     let url = await browser.getUrl()
     expect(url).to.equal(expectedURL)
 })
+
+Given(/^A Web page is opened (.*)$/, async function (url:string) {
+    await browser.url(url)
+    await browser.setTimeout({implicit: 15000, pageLoad: 10000})
+    await browser.maximizeWindow()
+})
+
+Then(/^perform web interactions$/, async function () {
+    /** 
+     * Input box:
+     * Actions:
+     * type into input box
+     * clear the field and type or just addvalue
+     * click and type
+     * slow typing
+    */
+
+    let element = await $(`[type=number]`)
+    await element.moveTo()
+    /**
+     * setValue will clear and add the value
+    */
+    // await element.setValue("12344")
+    /**
+     * addValue will add the value without clearing
+     */
+    // await element.addValue("007");
+
+    let num = 21345;
+    let strNum = num.toString();
+
+    await element.click();
+
+    for(let i = 0; i < strNum.length; i++){
+        let charStr = strNum.charAt(i);
+        await browser.pause(1000)
+        await browser.keys(charStr)
+    }
+})
+
+

@@ -1,6 +1,5 @@
 Feature: Demo feature
 
-    @ttest
     Scenario Outline: Run first demo feature
         Given Google page is opened
         When Search wth <searchItem>
