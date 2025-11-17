@@ -14,7 +14,7 @@ Feature: Web Interactions
 
         Examples:
             | TestID     | url       |
-            | DEMO_TC002 | /dropdown |
+            | DEMO_TC003 | /dropdown |
 
     Scenario Outline: Demo Web check box
         Given A Web page is opened <url>
@@ -22,7 +22,7 @@ Feature: Web Interactions
 
         Examples:
             | TestID     | url         |
-            | DEMO_TC002 | /checkboxes |
+            | DEMO_TC004 | /checkboxes |
 
     Scenario Outline: Demo Web handling windows
         Given A Web page is opened <url>
@@ -30,12 +30,53 @@ Feature: Web Interactions
 
         Examples:
             | TestID     | url      |
-            | DEMO_TC002 | /windows |
+            | DEMO_TC005 | /windows |
 
     Scenario Outline: Demo Web handling Alerts
         Given A Web page is opened <url>
-        When perform web interactions handling windows
+        When perform web interactions handling Alerts
 
         Examples:
-            | TestID     | url      |
-            | DEMO_TC002 | /windows |
+            | TestID     | url                |
+            | DEMO_TC006 | /javascript_alerts |
+
+
+    Scenario: Demo Web handling basic auth
+        Given A Web page is opened using basic auth
+        When perform web interactions basic auth
+
+
+    Scenario Outline: Demo Web File upload
+        Given A Web page is opened <url>
+        When perform web interactions File upload
+
+        Examples:
+            | TestID     | url     |
+            | DEMO_TC007 | /upload |
+
+    Scenario Outline: Demo Web Frames
+        Given A Web page is opened <url>
+        When perform web interactions Frames
+
+        Examples:
+            | TestID     | url     |
+            | DEMO_TC008 | /frames |
+
+
+    Scenario Outline: Demo Web Frames
+        Given A Web page is opened <url>
+        When perform web Keys
+
+        Examples:
+            | TestID     | url          |
+            | DEMO_TC009 | /key_presses |
+
+
+@ttest
+    Scenario Outline: Demo Web scrolling
+        Given A Web page is opened <url>
+        When perform web scroll
+
+        Examples:
+            | TestID     | url          |
+            | DEMO_TC010 | / |

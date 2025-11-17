@@ -27,9 +27,9 @@ Then(/^URL should match (.*)$/, async function (expectedURL) {
     expect(url).to.equal(expectedURL)
 })
 
-Given(/^A Web page is opened (.*)$/, async function (url:string) {
+Given(/^A Web page is opened (.*)$/, async function (url: string) {
     await browser.url(url)
-    await browser.setTimeout({implicit: 15000, pageLoad: 10000})
+    await browser.setTimeout({ implicit: 15000, pageLoad: 10000 })
     await browser.maximizeWindow()
 })
 
@@ -59,7 +59,7 @@ Then(/^perform web interactions$/, async function () {
 
     await element.click();
 
-    for(let i = 0; i < strNum.length; i++){
+    for (let i = 0; i < strNum.length; i++) {
         let charStr = strNum.charAt(i);
         await browser.pause(1000)
         await browser.keys(charStr)
@@ -101,16 +101,16 @@ Then(/^perform web interactions drop down$/, async function () {
 
     let eleArr = $$(`select[id='dropdown'] > option`)
     let size = await eleArr.length;
-    let arr =[];
+    let arr = [];
 
-   for(let i = 0; i < size; i++){
-    let ele = eleArr[i];
-    let val = ele.getText();
-    arr.push(val);
-   }
+    for (let i = 0; i < size; i++) {
+        let ele = eleArr[i];
+        let val = ele.getText();
+        arr.push(val);
+    }
 
-   console.log(`>> Options Array: ${arr} `)
-    
+    console.log(`>> Options Array: ${arr} `)
+
 })
 
 When(/^perform web interactions checkboxes$/, async function () {
@@ -127,7 +127,7 @@ When(/^perform web interactions checkboxes$/, async function () {
     let element = $(`//form[@id="checkboxes"]/input[1]`)
     let isChecked = await element.isSelected();
     expect(isChecked).to.true
-  
+
 })
 
 
@@ -148,42 +148,137 @@ When(/^perform web interactions handling windows$/, async function () {
      * 4.switchToWindow()
     */
 
-   await browser.pause(2000)
+    await browser.pause(2000)
 
-   let element1 = $(`=Click Here`)
-   let element2 = $(`=Elemental Selenium`)
+    let element1 = $(`=Click Here`)
+    let element2 = $(`=Elemental Selenium`)
 
-   await element1.click();
-   await element2.click();
+    await element1.click();
+    await element2.click();
 
-   let currentWindowTitle =  await browser.getTitle();
-   let parentWinHandle = await browser.getWindowHandle();
-   console.log(`current window Title: ${currentWindowTitle}`)
+    let currentWindowTitle = await browser.getTitle();
+    let parentWinHandle = await browser.getWindowHandle();
+    console.log(`current window Title: ${currentWindowTitle}`)
 
-   //switch to specifi window
-   let winHandles =  await browser.getWindowHandles();
-   for(let i = 0; i < winHandles.length; i++){
-      console.log(`>> win handle: ${winHandles[i]}`);
+    //switch to specifi window
+    let winHandles = await browser.getWindowHandles();
+    for (let i = 0; i < winHandles.length; i++) {
+        console.log(`>> win handle: ${winHandles[i]}`);
 
-      await browser.switchToWindow(winHandles[i])
-      currentWindowTitle = await browser.getTitle();
+        await browser.switchToWindow(winHandles[i])
+        currentWindowTitle = await browser.getTitle();
 
-      if(currentWindowTitle === "Home | Elemental Selenium"){
-           await browser.switchToWindow(winHandles[i])
-           let headerTextEleSel = await $(`<h1>`).getText();
-           console.log(`headerTextEleSel: ${headerTextEleSel}`)
-           // do business logic
-           break;
-      }
-   }
+        if (currentWindowTitle === "Home | Elemental Selenium") {
+            await browser.switchToWindow(winHandles[i])
+            let headerTextEleSel = await $(`<h1>`).getText();
+            console.log(`headerTextEleSel: ${headerTextEleSel}`)
+            // do business logic
+            break;
+        }
+    }
 
-   //Switch back to parent window
+    //Switch back to parent window
 
-   await browser.switchToWindow(parentWinHandle);
-   let parentWinHeaderText = await $(`<h3>`).getText();
+    await browser.switchToWindow(parentWinHandle);
+    let parentWinHeaderText = await $(`<h3>`).getText();
 
-   console.log(`>> parent window header text: ${parentWinHeaderText}`)
-   // continue with rest of the execution
-   
+    console.log(`>> parent window header text: ${parentWinHeaderText}`)
+    // continue with rest of the execution
+
 })
+
+
+When(/^perform web interactions handling Alerts$/, async function () {
+    /** 
+     *Handling alerts:
+     * Methods used:
+     * isAlertOpen()
+     * acceptAlert()
+     * dismissAlert()
+     * getAlertText()
+     * sendAlertText()
+    */
+    await browser.pause(10000);
+    //  await $(`button=Click for JS Alert`).click()
+    //  await $(`button=Click for JS Confirm`).click()
+    await $(`button=Click for JS Prompt`).click()
+
+    await browser.pause(10000);
+    if (await browser.isAlertOpen()) {
+        let alertText = await browser.getAlertText();
+        console.log(`>>alert text: ${alertText}`);
+        await browser.sendAlertText(`Hello JS prompt`)
+        await browser.pause(3000)
+        await browser.acceptAlert()
+        await browser.pause(3000)
+    } else {
+        console.log("not displayed");
+    }
+})
+
+Given(/^A Web page is opened using basic auth$/, async function () {
+    await browser.url(`https://admin:admin@the-internet.herokuapp.com/basic_auth`)
+    await browser.setTimeout({ implicit: 15000, pageLoad: 10000 })
+    await browser.maximizeWindow()
+})
+
+
+When(/^perform web interactions basic auth$/, async function () {
+
+    console.log(`passining`)
+
+})
+
+When(/^perform web interactions File upload$/, async function () {
+
+    await browser.pause(5000)
+
+    const file = await browser.uploadFile(`${process.cwd()}/data/fileupload/dummy.txt`)
+
+    await $(`#file-upload`).addValue(file)
+    await $(`#file-submit`).click()
+
+})
+
+When(/^perform web interactions Frames$/, async function () {
+    /***
+     * switchToFrame
+     * switchToParentFame
+     */
+    await $(`=iFrame`).click()
+
+    await browser.pause(4000)
+
+    let ele = $(`[title="Rich Text Area"]`);
+    await browser.switchFrame(ele);
+
+    await $(`#tinymce`).setValue('hi everyone')
+    await browser.switchToParentFrame()
+
+})
+
+When(/^perform web Keys$/, async function () {
+    /***
+     * switchToFrame
+     * switchToParentFame
+     */
+    let element =  $(`#target`)
+    await element.click()
+
+    await browser.keys(["Meta","A"])
+    await browser.pause(1000)
+    await browser.keys("Delete")
+
+    await browser.debug()
+})
+
+
+When(/^perform web scroll$/, async function () {
+   
+    let element =  $(`#singleFileInput`)
+    await element.scrollIntoView()
+
+    await browser.debug()
+})
+
 
