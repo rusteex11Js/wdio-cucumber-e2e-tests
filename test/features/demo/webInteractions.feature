@@ -72,11 +72,10 @@ Feature: Web Interactions
             | DEMO_TC009 | /key_presses |
 
 
-@ttest
     Scenario Outline: Demo Web scrolling
         Given A Web page is opened <url>
         When perform web scroll
 
         Examples:
-            | TestID     | url          |
-            | DEMO_TC010 | / |
+            | TestID     | url |
+            | DEMO_TC010 | /   |
